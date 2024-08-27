@@ -55,3 +55,12 @@ RomaQuest is a travel app developed with Flutter, designed to immerse users in t
 - **An Internet Connection**: Required for fetching weather data and using Firebase services.
 
 ## Screenshots
+![Home Page](assets/screenshots/start.png)<br>
+![Home Page](assets/screenshots/login.png)<br>
+![Home Page](assets/screenshots/register.png)<br>
+![Home Page](assets/screenshots/home.png)<br>
+![Home Page](assets/screenshots/fav.png)<br>
+![Home Page](assets/screenshots/place.png)<br>
+![Home Page](assets/screenshots/weather.png)<br>
+![Home Page](assets/screenshots/settings.png)
+
