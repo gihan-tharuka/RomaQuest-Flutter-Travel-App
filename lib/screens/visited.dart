@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:romaquest/models/place.dart';
 import 'package:romaquest/screens/placedetailsPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 class Visited extends StatefulWidget {
   const Visited({Key? key}) : super(key: key);
@@ -10,7 +10,7 @@ class Visited extends StatefulWidget {
 }
 
 class _VisitedState extends State<Visited> {
-  List<Map<String, dynamic>> visitedPlaces = [];
+  List<Place> visitedPlaces = [];
 
   @override
   void initState() {
@@ -20,28 +20,24 @@ class _VisitedState extends State<Visited> {
 
   void _loadVisitedPlaces() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? visitedString = prefs.getString('visitedPlaces');
-    List<Map<String, dynamic>> loadedPlaces = [];
-    if (visitedString != null) {
-      List<dynamic> visitedList = json.decode(visitedString);
-      loadedPlaces = visitedList.cast<Map<String, dynamic>>();
-    }
+    final visitedString = prefs.getString('visitedPlaces');
     setState(() {
-      visitedPlaces = loadedPlaces;
+      visitedPlaces = Place.listFromJsonString(visitedString);
     });
   }
 
   void _removeVisitedPlace(String placeName) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? visitedString = prefs.getString('visitedPlaces');
-    if (visitedString != null) {
-      List<dynamic> visitedList = json.decode(visitedString);
-      visitedList.removeWhere((place) => place['name'] == placeName);
-      await prefs.setString('visitedPlaces', json.encode(visitedList));
-      setState(() {
-        visitedPlaces = visitedList.cast<Map<String, dynamic>>();
-      });
-    }
+    final visitedList =
+        Place.listFromJsonString(prefs.getString('visitedPlaces'));
+    visitedList.removeWhere((place) => place.name == placeName);
+    await prefs.setString(
+      'visitedPlaces',
+      Place.listToJsonString(visitedList),
+    );
+    setState(() {
+      visitedPlaces = visitedList;
+    });
   }
 
   @override
@@ -71,13 +67,7 @@ class _VisitedState extends State<Visited> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => PlaceDetailsScreen(
-                              name: place['name']!,
-                              image: place['image']!,
-                              description: place['description']!,
-                              rating: place['rating']!,
-                              hours: place['hours']!,
-                              days: place['days']!,
-                              category: place['category']!,
+                              place: place,
                             ),
                           ),
                         );
@@ -92,7 +82,7 @@ class _VisitedState extends State<Visited> {
                                 alignment: Alignment.topRight,
                                 children: [
                                   Image.asset(
-                                    place['image']!,
+                                    place.image,
                                     width: double.infinity,
                                     height: 170,
                                     fit: BoxFit.cover,
@@ -101,7 +91,7 @@ class _VisitedState extends State<Visited> {
                                     padding: const EdgeInsets.all(10.0),
                                     child: GestureDetector(
                                       onTap: () {
-                                        _removeVisitedPlace(place['name']!);
+                                        _removeVisitedPlace(place.name);
                                       },
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(6),
@@ -131,7 +121,7 @@ class _VisitedState extends State<Visited> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          place['name']!,
+                                          place.name,
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -146,7 +136,7 @@ class _VisitedState extends State<Visited> {
                                               ),
                                             ),
                                             Text(
-                                              '${place['rating']}',
+                                              '${place.rating}',
                                               style: TextStyle(
                                                 fontSize: 14,
                                               ),

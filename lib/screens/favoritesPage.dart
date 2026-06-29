@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:romaquest/models/place.dart';
 import 'package:romaquest/screens/placedetailsPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 class FavouritesPage extends StatefulWidget {
   const FavouritesPage({Key? key}) : super(key: key);
@@ -10,7 +10,7 @@ class FavouritesPage extends StatefulWidget {
 }
 
 class _FavouritesPageState extends State<FavouritesPage> {
-  List<Map<String, dynamic>> favoritePlaces = [];
+  List<Place> favoritePlaces = [];
 
   @override
   void initState() {
@@ -20,28 +20,24 @@ class _FavouritesPageState extends State<FavouritesPage> {
 
   void _loadFavoritePlaces() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? favoritesString = prefs.getString('favoritePlaces');
-    List<Map<String, dynamic>> loadedPlaces = [];
-    if (favoritesString != null) {
-      List<dynamic> favoriteList = json.decode(favoritesString);
-      loadedPlaces = favoriteList.cast<Map<String, dynamic>>();
-    }
+    final favoritesString = prefs.getString('favoritePlaces');
     setState(() {
-      favoritePlaces = loadedPlaces;
+      favoritePlaces = Place.listFromJsonString(favoritesString);
     });
   }
 
   void _removeFavoritePlace(String placeName) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? favoritesString = prefs.getString('favoritePlaces');
-    if (favoritesString != null) {
-      List<dynamic> favoriteList = json.decode(favoritesString);
-      favoriteList.removeWhere((place) => place['name'] == placeName);
-      await prefs.setString('favoritePlaces', json.encode(favoriteList));
-      setState(() {
-        favoritePlaces = favoriteList.cast<Map<String, dynamic>>();
-      });
-    }
+    final favoriteList =
+        Place.listFromJsonString(prefs.getString('favoritePlaces'));
+    favoriteList.removeWhere((place) => place.name == placeName);
+    await prefs.setString(
+      'favoritePlaces',
+      Place.listToJsonString(favoriteList),
+    );
+    setState(() {
+      favoritePlaces = favoriteList;
+    });
   }
 
   @override
@@ -71,13 +67,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => PlaceDetailsScreen(
-                              name: place['name']!,
-                              image: place['image']!,
-                              description: place['description']!,
-                              rating: place['rating']!,
-                              hours: place['hours']!,
-                              days: place['days']!,
-                              category: place['category']!,
+                              place: place,
                             ),
                           ),
                         );
@@ -92,7 +82,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                 alignment: Alignment.topRight,
                                 children: [
                                   Image.asset(
-                                    place['image']!,
+                                    place.image,
                                     width: double.infinity,
                                     height: 170,
                                     fit: BoxFit.cover,
@@ -101,7 +91,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                     padding: const EdgeInsets.all(10.0),
                                     child: GestureDetector(
                                       onTap: () {
-                                        _removeFavoritePlace(place['name']!);
+                                        _removeFavoritePlace(place.name);
                                       },
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(6),
@@ -131,7 +121,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          place['name']!,
+                                          place.name,
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -146,7 +136,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                               ),
                                             ),
                                             Text(
-                                              '${place['rating']}',
+                                              '${place.rating}',
                                               style: TextStyle(
                                                 fontSize: 14,
                                               ),

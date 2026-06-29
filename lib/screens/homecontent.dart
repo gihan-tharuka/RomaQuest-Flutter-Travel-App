@@ -1,13 +1,13 @@
 
 import 'package:flutter/material.dart';
+import 'package:romaquest/models/place.dart';
+import 'package:romaquest/repositories/place_repository.dart';
 import 'package:romaquest/screens/Arrays/categories.dart';
 import 'package:romaquest/screens/placedetailsPage.dart';
-import 'package:romaquest/screens/Arrays/places.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:romaquest/screens/loginPage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Homecontent extends StatefulWidget {
   const Homecontent({Key? key}) : super(key: key);
@@ -17,9 +17,10 @@ class Homecontent extends StatefulWidget {
 }
 
 class _HomecontentState extends State<Homecontent> {
+  final PlaceRepository _placeRepository = const PlaceRepository();
   String selectedCategory = categories[0];
   final user = FirebaseAuth.instance.currentUser;
-  List<Map<String, dynamic>> favoritePlaces = [];
+  List<Place> favoritePlaces = [];
   String? _profileImagePath;
 
   @override
@@ -31,12 +32,10 @@ class _HomecontentState extends State<Homecontent> {
 
   void _loadFavoritePlaces() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? favoritesString = prefs.getString('favoritePlaces');
-    if (favoritesString != null) {
-      List<dynamic> favoriteList = json.decode(favoritesString);
-      favoritePlaces = favoriteList.cast<Map<String, dynamic>>();
-    }
-    setState(() {});
+    final favoritesString = prefs.getString('favoritePlaces');
+    setState(() {
+      favoritePlaces = Place.listFromJsonString(favoritesString);
+    });
   }
 
   void _loadProfileImage() async {
@@ -46,29 +45,29 @@ class _HomecontentState extends State<Homecontent> {
     });
   }
 
-  void _toggleFavoritePlace(Map<String, dynamic> place) async {
+  void _toggleFavoritePlace(Place place) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? favoritesString = prefs.getString('favoritePlaces');
-    List<dynamic> favoriteList =
-        favoritesString != null ? json.decode(favoritesString) : [];
+    final favoritesString = prefs.getString('favoritePlaces');
+    final favoriteList = Place.listFromJsonString(favoritesString);
 
-    bool isFavorite = favoriteList
-        .any((favoritePlace) => favoritePlace['name'] == place['name']);
+    final isFavorite =
+        favoriteList.any((favoritePlace) => favoritePlace.id == place.id);
 
     if (isFavorite) {
-      favoriteList.removeWhere(
-          (favoritePlace) => favoritePlace['name'] == place['name']);
+      favoriteList.removeWhere((favoritePlace) => favoritePlace.id == place.id);
     } else {
       favoriteList.add(place);
     }
 
-    await prefs.setString('favoritePlaces', json.encode(favoriteList));
+    await prefs.setString(
+      'favoritePlaces',
+      Place.listToJsonString(favoriteList),
+    );
     _loadFavoritePlaces();
   }
 
   bool _isFavoritePlace(String placeName) {
-    return favoritePlaces
-        .any((favoritePlace) => favoritePlace['name'] == placeName);
+    return favoritePlaces.any((favoritePlace) => favoritePlace.name == placeName);
   }
 
   void signUserOut() async {
@@ -81,8 +80,7 @@ class _HomecontentState extends State<Homecontent> {
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, dynamic>> categoryPlaces =
-        places.where((place) => place['category'] == selectedCategory).toList();
+    final categoryPlaces = _placeRepository.getPlacesByCategory(selectedCategory);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -210,13 +208,7 @@ class _HomecontentState extends State<Homecontent> {
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) =>
                           PlaceDetailsScreen(
-                        name: place['name']!,
-                        image: place['image']!,
-                        description: place['description']!,
-                        rating: place['rating']!,
-                        hours: place['hours']!,
-                        days: place['days']!,
-                        category: place['category']!,
+                        place: place,
                       ),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
@@ -239,14 +231,14 @@ class _HomecontentState extends State<Homecontent> {
                           alignment: Alignment.topRight,
                           children: [
                             Image.asset(
-                              place['image']!,
+                              place.image,
                               width: double.infinity,
                               height: 170,
                               fit: BoxFit.cover,
                             ),
                             IconButton(
                               icon: Icon(
-                                _isFavoritePlace(place['name']!)
+                                _isFavoritePlace(place.name)
                                     ? Icons.favorite
                                     : Icons.favorite_border,
                                 color: Colors.red,
@@ -266,8 +258,8 @@ class _HomecontentState extends State<Homecontent> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    place['name']!,
+                                        Text(
+                                    place.name,
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -282,7 +274,7 @@ class _HomecontentState extends State<Homecontent> {
                                         ),
                                       ),
                                       Text(
-                                        '${place['rating']}',
+                                        '${place.rating}',
                                         style: TextStyle(
                                           fontSize: 14,
                                         ),

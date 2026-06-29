@@ -1,27 +1,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:romaquest/models/place.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 class PlaceDetailsScreen extends StatefulWidget {
-  final String name;
-  final String image;
-  final String description;
-  final int rating;
-  final String hours;
-  final String days;
-  final String category;
+  final Place place;
 
   const PlaceDetailsScreen({
     Key? key,
-    required this.name,
-    required this.image,
-    required this.description,
-    required this.rating,
-    required this.hours,
-    required this.days,
-    required this.category,
+    required this.place,
   }) : super(key: key);
 
   @override
@@ -41,47 +29,37 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
 
   void _checkIfFavorite() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? favoritesString = prefs.getString('favoritePlaces');
-    if (favoritesString != null) {
-      List<dynamic> favoriteList = json.decode(favoritesString);
-      setState(() {
-        _isFavorite = favoriteList.any((place) => place['name'] == widget.name);
-      });
-    }
+    final favoriteList =
+        Place.listFromJsonString(prefs.getString('favoritePlaces'));
+    setState(() {
+      _isFavorite = favoriteList.any((place) => place.id == widget.place.id);
+    });
   }
 
   void _checkIfVisited() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? visitedString = prefs.getString('visitedPlaces');
-    if (visitedString != null) {
-      List<dynamic> visitedList = json.decode(visitedString);
-      setState(() {
-        _isVisited = visitedList.any((place) => place['name'] == widget.name);
-      });
-    }
+    final visitedList =
+        Place.listFromJsonString(prefs.getString('visitedPlaces'));
+    setState(() {
+      _isVisited = visitedList.any((place) => place.id == widget.place.id);
+    });
   }
 
   void _toggleFavorite() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? favoritesString = prefs.getString('favoritePlaces');
-    List<dynamic> favoriteList =
-        favoritesString != null ? json.decode(favoritesString) : [];
+    final favoriteList =
+        Place.listFromJsonString(prefs.getString('favoritePlaces'));
 
     if (_isFavorite) {
-      favoriteList.removeWhere((place) => place['name'] == widget.name);
+      favoriteList.removeWhere((place) => place.id == widget.place.id);
     } else {
-      favoriteList.add({
-        'name': widget.name,
-        'image': widget.image,
-        'description': widget.description,
-        'rating': widget.rating,
-        'hours': widget.hours,
-        'days': widget.days,
-        'category': widget.category,
-      });
+      favoriteList.add(widget.place);
     }
 
-    await prefs.setString('favoritePlaces', json.encode(favoriteList));
+    await prefs.setString(
+      'favoritePlaces',
+      Place.listToJsonString(favoriteList),
+    );
 
     setState(() {
       _isFavorite = !_isFavorite;
@@ -90,25 +68,19 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
 
   Future<void> _toggleVisited() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? visitedString = prefs.getString('visitedPlaces');
-    List<dynamic> visitedList =
-        visitedString != null ? json.decode(visitedString) : [];
+    final visitedList =
+        Place.listFromJsonString(prefs.getString('visitedPlaces'));
 
     if (_isVisited) {
-      visitedList.removeWhere((place) => place['name'] == widget.name);
+      visitedList.removeWhere((place) => place.id == widget.place.id);
     } else {
-      visitedList.add({
-        'name': widget.name,
-        'image': widget.image,
-        'description': widget.description,
-        'rating': widget.rating,
-        'hours': widget.hours,
-        'days': widget.days,
-        'category': widget.category,
-      });
+      visitedList.add(widget.place);
     }
 
-    await prefs.setString('visitedPlaces', json.encode(visitedList));
+    await prefs.setString(
+      'visitedPlaces',
+      Place.listToJsonString(visitedList),
+    );
 
     if (!mounted) {
       return;
@@ -128,7 +100,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
   }
 
   Future<void> _showLocationDetails() async {
-    final searchQuery = '${widget.name}, Rome, Italy';
+    final searchQuery = '${widget.place.name}, Rome, Italy';
     final mapsUrl =
         'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(searchQuery)}';
 
@@ -184,7 +156,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
             Stack(
               children: [
                 Image.asset(
-                  widget.image,
+                  widget.place.image,
                   height: 350,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -240,7 +212,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        widget.name,
+                        widget.place.name,
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -255,7 +227,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                             ),
                           ),
                           Text(
-                            '${widget.rating}',
+                            '${widget.place.rating}',
                             style: TextStyle(
                               fontSize: 14,
                             ),
@@ -270,7 +242,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                     ],
                   ),
                   SizedBox(height: 10),
-                  Text(widget.description),
+                  Text(widget.place.description),
                   SizedBox(height: 12),
                   Row(
                     children: [
@@ -282,7 +254,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                         ),
                       ),
                       Text(
-                        '${widget.days}',
+                        widget.place.days,
                         style: TextStyle(
                           fontSize: 14,
                         ),
@@ -300,7 +272,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                         ),
                       ),
                       Text(
-                        '${widget.hours}',
+                        widget.place.hours,
                         style: TextStyle(
                           fontSize: 14,
                         ),

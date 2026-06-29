@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:romaquest/models/place.dart';
+import 'package:romaquest/repositories/place_repository.dart';
 import 'package:romaquest/screens/favoritesPage.dart';
 import 'package:romaquest/screens/placedetailsPage.dart';
 import 'package:romaquest/screens/visited.dart';
@@ -13,6 +15,21 @@ void main() {
 
   setUp(() {
     SharedPreferences.setMockInitialValues({});
+  });
+
+  test('place repository loads and filters typed places', () {
+    const repository = PlaceRepository();
+
+    final allPlaces = repository.getAllPlaces();
+    final hotelPlaces = repository.getPlacesByCategory('Hotels');
+    final colosseum = repository.getPlaceByName('Colosseum');
+
+    expect(allPlaces, isNotEmpty);
+    expect(hotelPlaces, isNotEmpty);
+    expect(hotelPlaces.every((place) => place.category == 'Hotels'), isTrue);
+    expect(colosseum, isNotNull);
+    expect(colosseum, isA<Place>());
+    expect(colosseum!.image, 'assets/images/Colosseum.jpg');
   });
 
   testWidgets('welcome screen shows the primary call to action', (
@@ -66,13 +83,15 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: PlaceDetailsScreen(
-          name: 'Colosseum',
-          image: 'assets/images/Colosseum.jpg',
-          description: 'Historic amphitheatre in Rome.',
-          rating: 5,
-          hours: '9:00 AM - 6:00 PM',
-          days: 'Monday - Sunday',
-          category: 'Attractions',
+          place: Place(
+            name: 'Colosseum',
+            image: 'assets/images/Colosseum.jpg',
+            description: 'Historic amphitheatre in Rome.',
+            rating: 5,
+            hours: '9:00 AM - 6:00 PM',
+            days: 'Monday - Sunday',
+            category: 'Attractions',
+          ),
         ),
       ),
     );
@@ -90,5 +109,32 @@ void main() {
       isTrue,
     );
     expect(find.text('Visited'), findsOneWidget);
+  });
+
+  testWidgets('favorites screen still renders persisted place data', (
+    WidgetTester tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      'favoritePlaces': Place.listToJsonString([
+        const Place(
+          name: 'Pantheon',
+          image: 'assets/images/pantheon.jpg',
+          description: 'Ancient temple in Rome.',
+          rating: 4,
+          hours: '8:00 AM - 7:00 PM',
+          days: 'Monday - Sunday',
+          category: 'Attractions',
+        ),
+      ]),
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: FavouritesPage(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Pantheon'), findsOneWidget);
   });
 }
