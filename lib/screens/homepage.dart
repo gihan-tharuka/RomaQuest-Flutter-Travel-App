@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:romaquest/screens/profilePage.dart';
 import 'package:romaquest/screens/favoritesPage.dart';
 import 'package:romaquest/screens/homecontent.dart';
+import 'package:romaquest/theme/app_tokens.dart';
 import 'package:romaquest/screens/visited.dart';
 import 'package:romaquest/screens/weather.dart';
 
@@ -36,33 +37,83 @@ class _HomePageState extends State<HomePage> {
         return Scaffold(
           body: _pages[_selectedIndex],
           bottomNavigationBar: Container(
-            color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+            decoration: BoxDecoration(
+              color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+              border: Border(
+                top: BorderSide(
+                  color: Theme.of(context).dividerColor,
+                ),
+              ),
+            ),
             child: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
               currentIndex: _selectedIndex,
               onTap: _onItemTapped,
               selectedItemColor: Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
+              unselectedItemColor:
+                  Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
+              backgroundColor:
+                  Theme.of(context).bottomNavigationBarTheme.backgroundColor,
               showSelectedLabels: true,
-              showUnselectedLabels: false,
-              items: [
+              showUnselectedLabels: true,
+              selectedFontSize: 12,
+              unselectedFontSize: 12,
+              iconSize: 22,
+              landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
+              items: const [
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.favorite),
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: AppSpacing.xs),
+                    child: Icon(Icons.favorite_outline),
+                  ),
+                  activeIcon: Padding(
+                    padding: EdgeInsets.only(top: AppSpacing.xs),
+                    child: Icon(Icons.favorite),
+                  ),
                   label: 'Favourites',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.check_circle_outline),
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: AppSpacing.xs),
+                    child: Icon(Icons.check_circle_outline),
+                  ),
+                  activeIcon: Padding(
+                    padding: EdgeInsets.only(top: AppSpacing.xs),
+                    child: Icon(Icons.check_circle),
+                  ),
                   label: 'Visited',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: AppSpacing.xs),
+                    child: Icon(Icons.home_outlined),
+                  ),
+                  activeIcon: Padding(
+                    padding: EdgeInsets.only(top: AppSpacing.xs),
+                    child: Icon(Icons.home),
+                  ),
                   label: 'Home',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.sunny),
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: AppSpacing.xs),
+                    child: Icon(Icons.wb_sunny_outlined),
+                  ),
+                  activeIcon: Padding(
+                    padding: EdgeInsets.only(top: AppSpacing.xs),
+                    child: Icon(Icons.sunny),
+                  ),
                   label: 'Weather',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: AppSpacing.xs),
+                    child: Icon(Icons.person_outline),
+                  ),
+                  activeIcon: Padding(
+                    padding: EdgeInsets.only(top: AppSpacing.xs),
+                    child: Icon(Icons.person),
+                  ),
                   label: 'Profile',
                 ),
               ],
