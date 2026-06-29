@@ -16,6 +16,7 @@ class _WeatherState extends State<Weather> {
   String _country = 'Loading...';
   String _city = '';
   bool _hasError = false;
+  String _statusMessage = '';
 
   @override
   void initState() {
@@ -28,7 +29,12 @@ class _WeatherState extends State<Weather> {
       _fetchLocationAndWeather();
     } else {
       setState(() {
-        _weather = 'Location permission denied';
+        _weather = '--';
+        _temperature = '--';
+        _country = '--';
+        _city = 'Unavailable';
+        _hasError = true;
+        _statusMessage = 'Location permission denied. Enable location access to view local weather.';
       });
     }
   }
@@ -55,16 +61,19 @@ class _WeatherState extends State<Weather> {
           _temperature = '$temperature°C';
           _country = '$country';
           _city = '$name';
-          _hasError = false; 
+          _hasError = false;
+          _statusMessage = '';
         });
       } else {
         setState(() {
-          _hasError = true; 
+          _hasError = true;
+          _statusMessage = 'Weather data is unavailable right now. Please try again later.';
         });
       }
     } catch (error) {
       setState(() {
-        _hasError = true; 
+        _hasError = true;
+        _statusMessage = 'Unable to load weather data. Check your internet connection and try again.';
       });
     }
   }
@@ -76,7 +85,8 @@ class _WeatherState extends State<Weather> {
       _fetchWeather(position.latitude, position.longitude);
     } catch (error) {
       setState(() {
-        _hasError = true; 
+        _hasError = true;
+        _statusMessage = 'Unable to determine your current location.';
       });
     }
   }
@@ -167,7 +177,7 @@ class _WeatherState extends State<Weather> {
                           child: Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
-                              'You are not connected to the internet. Please check your connection and try again.',
+                              _statusMessage,
                               style: TextStyle(
                                 color: Colors.red,
                                 fontSize: 16,

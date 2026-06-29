@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:romaquest/screens/profilePage.dart';
 import 'package:romaquest/screens/favoritesPage.dart';
 import 'package:romaquest/screens/homecontent.dart';
+import 'package:romaquest/screens/visited.dart';
 import 'package:romaquest/screens/weather.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,10 +13,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 1; 
+  int _selectedIndex = 2;
 
   static const List<Widget> _pages = [
     FavouritesPage(),
+    Visited(),
     Homecontent(),
     Weather(),
     ProfilePage(),
@@ -46,6 +48,10 @@ class _HomePageState extends State<HomePage> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.favorite),
                   label: 'Favourites',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.check_circle_outline),
+                  label: 'Visited',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home),

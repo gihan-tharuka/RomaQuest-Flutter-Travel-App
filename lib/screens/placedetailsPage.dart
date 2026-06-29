@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -29,11 +30,13 @@ class PlaceDetailsScreen extends StatefulWidget {
 
 class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
   bool _isFavorite = false;
+  bool _isVisited = false;
 
   @override
   void initState() {
     super.initState();
     _checkIfFavorite();
+    _checkIfVisited();
   }
 
   void _checkIfFavorite() async {
@@ -43,6 +46,17 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
       List<dynamic> favoriteList = json.decode(favoritesString);
       setState(() {
         _isFavorite = favoriteList.any((place) => place['name'] == widget.name);
+      });
+    }
+  }
+
+  void _checkIfVisited() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? visitedString = prefs.getString('visitedPlaces');
+    if (visitedString != null) {
+      List<dynamic> visitedList = json.decode(visitedString);
+      setState(() {
+        _isVisited = visitedList.any((place) => place['name'] == widget.name);
       });
     }
   }
@@ -72,6 +86,92 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
     setState(() {
       _isFavorite = !_isFavorite;
     });
+  }
+
+  Future<void> _toggleVisited() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? visitedString = prefs.getString('visitedPlaces');
+    List<dynamic> visitedList =
+        visitedString != null ? json.decode(visitedString) : [];
+
+    if (_isVisited) {
+      visitedList.removeWhere((place) => place['name'] == widget.name);
+    } else {
+      visitedList.add({
+        'name': widget.name,
+        'image': widget.image,
+        'description': widget.description,
+        'rating': widget.rating,
+        'hours': widget.hours,
+        'days': widget.days,
+        'category': widget.category,
+      });
+    }
+
+    await prefs.setString('visitedPlaces', json.encode(visitedList));
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _isVisited = !_isVisited;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          _isVisited ? 'Added to visited places.' : 'Removed from visited places.',
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showLocationDetails() async {
+    final searchQuery = '${widget.name}, Rome, Italy';
+    final mapsUrl =
+        'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(searchQuery)}';
+
+    await showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Location'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Search for this place in maps:'),
+              SizedBox(height: 8),
+              SelectableText(searchQuery),
+              SizedBox(height: 12),
+              SelectableText(mapsUrl),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await Clipboard.setData(ClipboardData(text: mapsUrl));
+                if (!context.mounted) {
+                  return;
+                }
+                Navigator.pop(context);
+                ScaffoldMessenger.of(this.context).showSnackBar(
+                  SnackBar(content: Text('Maps link copied to clipboard.')),
+                );
+              },
+              child: Text('Copy Link'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -212,7 +312,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: _showLocationDetails,
                         icon: Icon(
                           Icons.location_on,
                           color: Colors.white,
@@ -231,13 +331,13 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                         ),
                       ),
                       ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: _toggleVisited,
                         icon: Icon(
-                          Icons.check,
+                          _isVisited ? Icons.check_circle : Icons.check,
                           color: Colors.white,
                         ),
                         label: Text(
-                          'Add to Visited',
+                          _isVisited ? 'Visited' : 'Add to Visited',
                           style: TextStyle(
                             color: Colors.white,
                           ),
