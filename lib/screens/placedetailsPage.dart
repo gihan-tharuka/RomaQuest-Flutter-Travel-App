@@ -94,7 +94,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                   left: 20,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.7),
+                      color: Colors.black.withValues(alpha: 0.7),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     padding: EdgeInsets.all(1),
@@ -114,7 +114,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                   right: 20,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.7),
+                      color: Colors.black.withValues(alpha: 0.7),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     padding: EdgeInsets.all(1),

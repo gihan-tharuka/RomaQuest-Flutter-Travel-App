@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sample_project/screens/welcomePage.dart';
-import 'package:sample_project/theme/dark_theme.dart';
-import 'package:sample_project/theme/light_theme.dart';
+import 'package:romaquest/screens/welcomePage.dart';
+import 'package:romaquest/theme/dark_theme.dart';
+import 'package:romaquest/theme/light_theme.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';

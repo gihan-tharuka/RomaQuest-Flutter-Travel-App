@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sample_project/screens/homepage.dart';
-import 'package:sample_project/screens/loginPage.dart';
+import 'package:romaquest/screens/homepage.dart';
+import 'package:romaquest/screens/loginPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 
@@ -31,7 +31,7 @@ void signUserUp() async {
         
       }
       
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException {
       
       await showDialog(
         context: context,
@@ -88,7 +88,7 @@ void signUserUp() async {
             top: MediaQuery.of(context).size.height * 0.35,
             child: Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(50),
                   topRight: Radius.circular(50),
@@ -248,5 +248,4 @@ void signUserUp() async {
     );
   }
 }
-
 

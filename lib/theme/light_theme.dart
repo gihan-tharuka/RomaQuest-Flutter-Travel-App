@@ -16,7 +16,7 @@ ThemeData lightTheme = ThemeData(
     color: Colors.white, 
   ),
   colorScheme: ColorScheme.light(
-    background: Colors.white,
+    surface: Colors.white,
     primary: Colors.white,
     secondary: Colors.black,
     onPrimary: Colors.white, 

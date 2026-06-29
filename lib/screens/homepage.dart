@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sample_project/screens/profilePage.dart';
-import 'package:sample_project/screens/favoritesPage.dart';
-import 'package:sample_project/screens/homecontent.dart';
-import 'package:sample_project/screens/weather.dart';
+import 'package:romaquest/screens/profilePage.dart';
+import 'package:romaquest/screens/favoritesPage.dart';
+import 'package:romaquest/screens/homecontent.dart';
+import 'package:romaquest/screens/weather.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

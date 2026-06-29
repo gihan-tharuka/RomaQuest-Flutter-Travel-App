@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:sample_project/screens/auth_page.dart';
+import 'package:romaquest/screens/auth_page.dart';
 
 class WelcomePage extends StatelessWidget {
   @override
@@ -20,7 +20,7 @@ class WelcomePage extends StatelessWidget {
             top: MediaQuery.of(context).size.height * 0.55,
             child: Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(50),
                   topRight: Radius.circular(50),

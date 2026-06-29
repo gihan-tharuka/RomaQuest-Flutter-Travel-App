@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sample_project/screens/placedetailsPage.dart';
-import 'package:sample_project/screens/Arrays/visitedPlaces.dart';
+import 'package:romaquest/screens/placedetailsPage.dart';
+import 'package:romaquest/screens/Arrays/visitedPlaces.dart';
 
 class Visited extends StatefulWidget {
   const Visited({Key? key}) : super(key: key);

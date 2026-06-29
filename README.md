@@ -1,66 +1,67 @@
-# RomaQuest Travel App
+# RomaQuest
 
-## Project Description
+## Overview
 
-RomaQuest is a travel app developed with Flutter, designed to immerse users in the captivating allure of Rome, the Eternal City. With an intuitive interface and seamless navigation, this app brings the ancient wonders and modern delights of Rome to your fingertips.
+RomaQuest is a Flutter travel app centered on exploring places in Rome. The current app includes Firebase authentication, curated place listings, favorites saved locally, location-based weather, and a profile screen with camera and battery integrations.
 
-## Installation Instructions
+## Environment
 
-1. **Clone the Repository**:
+- **Flutter SDK**: 3.44.4
+- **Dart SDK**: 3.12.2
+
+## Setup
+
+1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/romaquest-travel-app.git
-
-1. **Navigate to the Project Directory**:
+   git clone <your-repo-url>
+   ```
+2. Move into the project directory:
    ```bash
-   cd romaquest-travel-app
-   
-3.  **Install Dependencies**:
-    ```bash
-    flutter pub get
+   cd RomaQuest-Flutter-Travel-App
+   ```
+3. Get dependencies:
+   ```bash
+   flutter pub get
+   ```
+4. Run the app:
+   ```bash
+   flutter run
+   ```
 
-5.  **Run the App**:
-    ```bash
-    flutter run
+## Current Features
 
-## Usage
+- Firebase email/password registration and login
+- Welcome flow with auth state check
+- Rome place browsing by category
+- Place detail pages with ratings, hours, and descriptions
+- Favorite places saved with `SharedPreferences`
+- Weather lookup using device location and OpenWeatherMap
+- Profile photo capture with the device camera
+- Battery level display on the profile screen
 
-1. **Launch the App**: Follow the installation instructions to set up the app locally.
-2. **Explore Rome**: Navigate through the app to explore various places, check the weather, and save your favorite locations.
-3. **Use Features**: Utilize features like camera access to capture images, geolocation for location-based services, and check battery status.
+## Tech Stack
 
-## Features
-- **User Authentication**: Registration and login via Firebase.
-- **Weather Information**: Fetches real-time weather data using the OpenWeatherMap API.
-- **Offline Content**: Displays relevant content even when the device is offline.
-- **Favorite Locations**: Save favorite places using shared preferences.
-- **Favorites Display**: View saved favorite locations on a dedicated screen.
-- **Place Details**: Explore detailed information about various places in Rome.
-- **Responsive Layouts**: The app adjusts to different screen sizes and orientations.
-- **Camera Integration**: Capture images using the device's camera.
-- **Geolocation**: Get the current location of the device.
-- **Battery Status**: Monitor the device's battery percentage.
+- Flutter
+- Firebase Authentication
+- Shared Preferences
+- OpenWeatherMap API
+- Geolocator and permission handling
+- Image Picker
+- Battery Plus
 
-## Technologies Used
-- **Flutter**: For building the cross-platform mobile application.
-- **Firebase Authentication**: For user authentication and registration.
-- **OpenWeatherMap API**: For fetching weather data.
-- **Shared Preferences**: For storing and retrieving favorite locations.
-- **JSON**: For handling data within the app.
-- **Device Sensors**: Accessing the camera, geolocation, and battery status.
+## Notes
 
-## Requirements
-- **Flutter SDK**: Version 2.0 or higher.
-- **Dart SDK**: Version 2.12 or higher.
-- **Android Studio / Xcode**: For running the app on Android or iOS devices.
-- **An Internet Connection**: Required for fetching weather data and using Firebase services.
+- Firebase configuration is already committed for the current project setup.
+- Weather data requires location permission and network access.
+- The app includes Android, iOS, web, macOS, Linux, and Windows platform folders.
 
 ## Screenshots
-![Home Page](assets/screenshots/start.png)<br>
-![Home Page](assets/screenshots/login.png)<br>
-![Home Page](assets/screenshots/register.png)<br>
-![Home Page](assets/screenshots/home.png)<br>
-![Home Page](assets/screenshots/fav.png)<br>
-![Home Page](assets/screenshots/place.png)<br>
-![Home Page](assets/screenshots/weather.png)<br>
-![Home Page](assets/screenshots/settings.png)
 
+![Welcome screen](assets/screenshots/start.png)<br>
+![Login screen](assets/screenshots/login.png)<br>
+![Registration screen](assets/screenshots/register1.png)<br>
+![Home screen](assets/screenshots/home.png)<br>
+![Favorites screen](assets/screenshots/fav.png)<br>
+![Place details screen](assets/screenshots/place.png)<br>
+![Weather screen](assets/screenshots/weather.png)<br>
+![Profile screen](assets/screenshots/settings.png)

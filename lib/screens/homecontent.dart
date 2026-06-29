@@ -1,10 +1,10 @@
 
 import 'package:flutter/material.dart';
-import 'package:sample_project/screens/Arrays/categories.dart';
-import 'package:sample_project/screens/placedetailsPage.dart';
-import 'package:sample_project/screens/Arrays/places.dart';
+import 'package:romaquest/screens/Arrays/categories.dart';
+import 'package:romaquest/screens/placedetailsPage.dart';
+import 'package:romaquest/screens/Arrays/places.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sample_project/screens/loginPage.dart';
+import 'package:romaquest/screens/loginPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:io';
