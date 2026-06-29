@@ -38,7 +38,7 @@ class WelcomePage extends StatelessWidget {
                       Text(
                         'WELCOME TO ROME...',
                         style: TextStyle(
-                          color: Theme.of(context).textTheme.bodyText1!.color,
+                          color: Theme.of(context).textTheme.bodyLarge!.color,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
@@ -49,7 +49,7 @@ class WelcomePage extends StatelessWidget {
                         'Immerse yourself in the timeless charm of Rome, where ancient history and modern allure seamlessly blend, inviting you on a journey of discovery and adventure.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Theme.of(context).textTheme.bodyText1!.color,
+                          color: Theme.of(context).textTheme.bodyLarge!.color,
                           fontSize: 15,
                         ),
                       ),

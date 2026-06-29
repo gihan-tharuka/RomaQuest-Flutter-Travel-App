@@ -12,7 +12,7 @@ ThemeData lightTheme = ThemeData(
   ),
 
   
-  cardTheme: CardTheme(
+  cardTheme: CardThemeData(
     color: Colors.white, 
   ),
   colorScheme: ColorScheme.light(

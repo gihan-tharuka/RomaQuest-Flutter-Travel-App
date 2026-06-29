@@ -10,7 +10,7 @@ ThemeData darkTheme = ThemeData(
     unselectedItemColor: Colors.grey, 
   ),
 
-  cardTheme: CardTheme(
+  cardTheme: CardThemeData(
     color: Colors.grey[900]!,
   ),
 
