@@ -4,7 +4,7 @@ import 'package:romaquest/screens/homepage.dart';
 import 'package:romaquest/screens/loginPage.dart';
 
 class AuthPage extends StatelessWidget {
-  const AuthPage( {super.key});
+  const AuthPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +13,9 @@ class AuthPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return HomePage();
+            return const HomePage();
           } else {
-            return LoginPage();
+            return const LoginPage();
           }
         },
       ),

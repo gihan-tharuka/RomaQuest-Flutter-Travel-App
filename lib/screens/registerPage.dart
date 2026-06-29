@@ -3,9 +3,11 @@ import 'package:romaquest/screens/homepage.dart';
 import 'package:romaquest/screens/loginPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:romaquest/theme/app_tokens.dart';
-
+import 'package:romaquest/widgets/auth_shell.dart';
 
 class RegistrationPage extends StatefulWidget {
+  const RegistrationPage({super.key});
+
   @override
   _RegistrationPageState createState() => _RegistrationPageState();
 }
@@ -15,39 +17,31 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-void signUserUp() async {
+  void signUserUp() async {
     try {
       if (_passwordController.text == _confirmPasswordController.text) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
-
+        if (!mounted) return;
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
-      }else{
-         passwordMismatchMessage();
-        
+      } else {
+        passwordMismatchMessage();
       }
-      
     } on FirebaseAuthException {
-      
       await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Error'),
-          content: Text('You are not connected to the internet.'),
+          title: const Text('Could not create account'),
+          content: const Text('You are not connected to the internet.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text(
-                'OK',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
+              child: const Text('OK'),
             ),
           ],
         ),
@@ -59,115 +53,106 @@ void signUserUp() async {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Password Mismatch'),
-        content: Text('Please check your password and try again.'),
+        title: const Text('Password mismatch'),
+        content: const Text('Please check your password and try again.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
+    final theme = Theme.of(context);
+
+    return AuthHeroScaffold(
+      panelTopFraction: 0.32,
+      hero: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                  'assets/images/background5.png',
-                ),
-                fit: BoxFit.cover,
-              ),
+          Text(
+            'Create your Rome companion',
+            style: theme.textTheme.displaySmall?.copyWith(
+              color: Colors.white,
+              height: 1.05,
             ),
           ),
-          Positioned.fill(
-            top: MediaQuery.of(context).size.height * 0.35,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(AppRadius.xl),
-                  topRight: Radius.circular(AppRadius.xl),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 30, bottom: 30), 
-                        child: Text(
-                          'Create New Account', 
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                      ),
-                      SizedBox(height: AppSpacing.sm),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: TextField(
-                          controller: _emailController,
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: AppSpacing.sm),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: TextField(
-                          controller: _passwordController,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                          ),
-                          obscureText: true,
-                        ),
-                      ),
-                      SizedBox(height: AppSpacing.sm),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: TextField(
-                          controller: _confirmPasswordController,
-                          decoration: InputDecoration(
-                            labelText: 'Confirm Password',
-                          ),
-                          obscureText: true,
-                        ),
-                      ),
-                      SizedBox(height: AppSpacing.xl),
-                      ElevatedButton(
-                        onPressed: () async {
-                          signUserUp();
-                        },
-                        child: Text('Register'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()),
-                          );
-                        },
-                        child: Text(
-                          'Already have an account ? Log in',
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'Set up an account to keep your favourites, visited places, and travel plans together.',
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
         ],
+      ),
+      panelChild: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.xl,
+          AppSpacing.xl,
+          AppSpacing.xl,
+          AppSpacing.lg,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AuthPanelHeader(
+              title: 'Create account',
+              subtitle: 'Register with your email to start saving your Rome picks.',
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            TextField(
+              controller: _passwordController,
+              decoration: const InputDecoration(
+                labelText: 'Password',
+              ),
+              obscureText: true,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            TextField(
+              controller: _confirmPasswordController,
+              decoration: const InputDecoration(
+                labelText: 'Confirm Password',
+              ),
+              obscureText: true,
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  signUserUp();
+                },
+                child: const Text('Register'),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginPage(),
+                    ),
+                  );
+                },
+                child: const Text('Already have an account? Log in'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

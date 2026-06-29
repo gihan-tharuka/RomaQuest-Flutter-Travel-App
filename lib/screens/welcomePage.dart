@@ -2,70 +2,94 @@
 import 'package:flutter/material.dart';
 import 'package:romaquest/screens/auth_page.dart';
 import 'package:romaquest/theme/app_tokens.dart';
+import 'package:romaquest/widgets/auth_shell.dart';
 
 class WelcomePage extends StatelessWidget {
+  const WelcomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
+    final theme = Theme.of(context);
+
+    return AuthHeroScaffold(
+      panelTopFraction: 0.56,
+      hero: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.sm,
+              vertical: AppSpacing.xs,
+            ),
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/background5.png'),
-                fit: BoxFit.cover,
+              color: Colors.white.withValues(alpha: 0.16),
+              borderRadius: AppBorders.pill,
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.22),
+              ),
+            ),
+            child: Text(
+              'RomaQuest',
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: Colors.white,
               ),
             ),
           ),
-          Positioned.fill(
-            top: MediaQuery.of(context).size.height * 0.55,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(AppRadius.xl),
-                  topRight: Radius.circular(AppRadius.xl),
-                ),
-              ),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.1,
-                    vertical: AppSpacing.lg,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'WELCOME TO ROME...',
-                        style: Theme.of(context).textTheme.headlineMedium,
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: AppSpacing.xl),
-                      Text(
-                        'Immerse yourself in the timeless charm of Rome, where ancient history and modern allure seamlessly blend, inviting you on a journey of discovery and adventure.',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      SizedBox(height: AppSpacing.xl),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AuthPage(),
-                            ),
-                          );
-                        },
-                        child: Text('Get Started'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+          const Spacer(),
+          Text(
+            'See Rome with a clearer sense of place.',
+            style: theme.textTheme.displaySmall?.copyWith(
+              color: Colors.white,
+              height: 1.05,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'Save favourites, track where you have been, and keep the city close while you explore.',
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
         ],
+      ),
+      panelChild: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.xl,
+          AppSpacing.xl,
+          AppSpacing.xl,
+          AppSpacing.lg,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Welcome to Rome',
+              style: theme.textTheme.headlineMedium,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              'Start your city guide with curated places, weather snapshots, and simple travel planning tools.',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.textTheme.bodySmall?.color,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AuthPage(),
+                    ),
+                  );
+                },
+                child: const Text('Get Started'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:romaquest/screens/homepage.dart';
 import 'package:romaquest/screens/registerPage.dart';
 import 'package:romaquest/theme/app_tokens.dart';
+import 'package:romaquest/widgets/auth_shell.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   void signUserIn() async {
     try {
@@ -20,9 +22,10 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text,
         password: _passwordController.text,
       );
+      if (!mounted) return;
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-credential') {
@@ -31,22 +34,16 @@ class _LoginPageState extends State<LoginPage> {
         await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Error'),
-            content: Text('You are not connected to the internet.'),
+            title: const Text('Could not sign in'),
+            content: const Text('You are not connected to the internet.'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'OK',
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
+                child: const Text('OK'),
               ),
             ],
           ),
         );
-
       }
     }
   }
@@ -55,12 +52,12 @@ class _LoginPageState extends State<LoginPage> {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Incorrect Email or Password'),
-        content: Text('Please check your credentials and try again.'),
+        title: const Text('Incorrect email or password'),
+        content: const Text('Please check your credentials and try again.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -69,87 +66,84 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
+    final theme = Theme.of(context);
+
+    return AuthHeroScaffold(
+      panelTopFraction: 0.42,
+      hero: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                  'assets/images/background5.png',
-                ),
-                fit: BoxFit.cover,
-              ),
+          Text(
+            'Welcome back',
+            style: theme.textTheme.displaySmall?.copyWith(
+              color: Colors.white,
+              height: 1.05,
             ),
           ),
-          Positioned.fill(
-            top: MediaQuery.of(context).size.height * 0.5,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(AppRadius.xl),
-                  topRight: Radius.circular(AppRadius.xl),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Log In To Continue',
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ),
-                      SizedBox(height: AppSpacing.sm),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: TextField(
-                          controller: _emailController,
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: AppSpacing.sm),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: TextField(
-                          controller: _passwordController,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                          ),
-                          obscureText: true,
-                        ),
-                      ),
-                      SizedBox(height: AppSpacing.xl),
-                      ElevatedButton(
-                        onPressed: () async {
-                          signUserIn();
-                        },
-                        child: Text('Login'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => RegistrationPage()),
-                          );
-                        },
-                        child: Text(
-                          'Sign Up',
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'Pick up your Rome plans where you left them.',
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
         ],
+      ),
+      panelChild: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.xl,
+          AppSpacing.xl,
+          AppSpacing.xl,
+          AppSpacing.lg,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AuthPanelHeader(
+              title: 'Log in',
+              subtitle: 'Use your account to access your saved places and travel notes.',
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            TextField(
+              controller: _passwordController,
+              decoration: const InputDecoration(
+                labelText: 'Password',
+              ),
+              obscureText: true,
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  signUserIn();
+                },
+                child: const Text('Login'),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RegistrationPage(),
+                    ),
+                  );
+                },
+                child: const Text('Create an account'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

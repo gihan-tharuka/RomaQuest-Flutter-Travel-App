@@ -37,11 +37,11 @@ void main() {
   ) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: WelcomePage(),
+        home: const WelcomePage(),
       ),
     );
 
-    expect(find.text('WELCOME TO ROME...'), findsOneWidget);
+    expect(find.text('Welcome to Rome'), findsOneWidget);
     expect(find.text('Get Started'), findsOneWidget);
   });
 
