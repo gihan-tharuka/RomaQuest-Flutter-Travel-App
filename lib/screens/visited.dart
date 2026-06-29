@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:romaquest/models/place.dart';
 import 'package:romaquest/screens/placedetailsPage.dart';
+import 'package:romaquest/theme/app_tokens.dart';
+import 'package:romaquest/widgets/empty_state_view.dart';
+import 'package:romaquest/widgets/saved_place_tile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Visited extends StatefulWidget {
@@ -44,122 +47,47 @@ class _VisitedState extends State<Visited> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Visited Places'),
+        title: const Text('Visited Places'),
         automaticallyImplyLeading: false,
       ),
       body: visitedPlaces.isEmpty
-          ? Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Text(
+          ? const EmptyStateView(
+              icon: Icons.check_circle_outline,
+              title: 'No visits yet',
+              message:
                   'No visited places yet. Add one from a place details screen.',
-                  textAlign: TextAlign.center,
-                ),
-              ),
             )
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  for (var place in visitedPlaces)
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PlaceDetailsScreen(
-                              place: place,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Card(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Stack(
-                                alignment: Alignment.topRight,
-                                children: [
-                                  Image.asset(
-                                    place.image,
-                                    width: double.infinity,
-                                    height: 170,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        _removeVisitedPlace(place.name);
-                                      },
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(6),
-                                        child: Container(
-                                          color: Colors.black54,
-                                          padding: EdgeInsets.all(4),
-                                          child: Text(
-                                            'Remove',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(18.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          place.name,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              'Rating: ',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            Text(
-                                              '${place.rating}',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: Colors.yellow,
-                                              size: 16,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+          : ListView.separated(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.md,
+                AppSpacing.lg,
+                AppSpacing.xl,
+              ),
+              itemCount: visitedPlaces.length,
+              separatorBuilder: (context, index) =>
+                  const SizedBox(height: AppSpacing.md),
+              itemBuilder: (context, index) {
+                final place = visitedPlaces[index];
+
+                return SavedPlaceTile(
+                  place: place,
+                  removeLabel: 'Remove from visited',
+                  onRemove: () {
+                    _removeVisitedPlace(place.name);
+                  },
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PlaceDetailsScreen(
+                          place: place,
                         ),
                       ),
-                    ),
-                ],
-              ),
+                    );
+                  },
+                );
+              },
             ),
     );
   }

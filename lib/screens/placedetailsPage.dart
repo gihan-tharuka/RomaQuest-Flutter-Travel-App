@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:romaquest/models/place.dart';
+import 'package:romaquest/theme/app_tokens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PlaceDetailsScreen extends StatefulWidget {
@@ -148,6 +149,8 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -155,23 +158,38 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
           children: [
             Stack(
               children: [
-                Image.asset(
-                  widget.place.image,
-                  height: 350,
+                SizedBox(
+                  height: 380,
                   width: double.infinity,
-                  fit: BoxFit.cover,
+                  child: Image.asset(
+                    widget.place.image,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.12),
+                          Colors.transparent,
+                          Colors.black.withValues(alpha: 0.38),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
                 Positioned(
-                  top: 35,
+                  top: 44,
                   left: 20,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.7),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: EdgeInsets.all(1),
+                  child: Material(
+                    color: Colors.black.withValues(alpha: 0.58),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
+                    clipBehavior: Clip.antiAlias,
                     child: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_back,
                         color: Colors.white,
                       ),
@@ -182,18 +200,16 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                   ),
                 ),
                 Positioned(
-                  top: 35,
+                  top: 44,
                   right: 20,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.7),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: EdgeInsets.all(1),
+                  child: Material(
+                    color: Colors.black.withValues(alpha: 0.58),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
+                    clipBehavior: Clip.antiAlias,
                     child: IconButton(
                       icon: Icon(
-                        Icons.favorite,
-                        color: _isFavorite ? Colors.red : Colors.white,
+                        _isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: _isFavorite ? theme.colorScheme.secondary : Colors.white,
                       ),
                       onPressed: () {
                         _toggleFavorite();
@@ -201,127 +217,134 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                     ),
                   ),
                 ),
+                Positioned(
+                  left: AppSpacing.lg,
+                  right: AppSpacing.lg,
+                  bottom: AppSpacing.lg,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.16),
+                          borderRadius: AppBorders.pill,
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.2),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.sm,
+                            vertical: 6,
+                          ),
+                          child: Text(
+                            widget.place.category,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        widget.place.name,
+                        style: theme.textTheme.displaySmall?.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
+            Transform.translate(
+              offset: const Offset(0, -24),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.xl),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Wrap(
+                          spacing: AppSpacing.sm,
+                          runSpacing: AppSpacing.sm,
+                          children: [
+                            _DetailMetaChip(
+                              icon: Icons.star_rounded,
+                              label: '${widget.place.rating}.0 rating',
+                              iconColor: const Color(0xFFE0A020),
+                            ),
+                            _DetailMetaChip(
+                              icon: Icons.calendar_today_rounded,
+                              label: widget.place.days,
+                            ),
+                            _DetailMetaChip(
+                              icon: Icons.schedule_rounded,
+                              label: widget.place.hours,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.xl),
+                        _DetailSection(
+                          title: 'About this place',
+                          child: Text(
+                            widget.place.description,
+                            style: theme.textTheme.bodyLarge,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.xl),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton.icon(
+                                onPressed: _showLocationDetails,
+                                icon: const Icon(Icons.location_on_outlined),
+                                label: const Text('Get location'),
+                              ),
+                            ),
+                            const SizedBox(width: AppSpacing.md),
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: _toggleVisited,
+                                icon: Icon(
+                                  _isVisited ? Icons.check_circle : Icons.check,
+                                ),
+                                label: Text(
+                                  _isVisited ? 'Visited' : 'Add to Visited',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                0,
+                AppSpacing.lg,
+                AppSpacing.xl,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        widget.place.name,
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            'Rating: ',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                          Text(
-                            '${widget.place.rating}',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 20,
-                          ),
-                        ],
-                      ),
-                    ],
+                  Text(
+                    'Plan your stop',
+                    style: theme.textTheme.titleLarge,
                   ),
-                  SizedBox(height: 10),
-                  Text(widget.place.description),
-                  SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Text(
-                        'Open Days:  ',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        widget.place.days,
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Text(
-                        'Open Hours:  ',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        widget.place.hours,
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton.icon(
-                        onPressed: _showLocationDetails,
-                        icon: Icon(
-                          Icons.location_on,
-                          color: Colors.white,
-                        ),
-                        label: Text(
-                          'Get location',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
-                          foregroundColor:
-                              Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      ),
-                      ElevatedButton.icon(
-                        onPressed: _toggleVisited,
-                        icon: Icon(
-                          _isVisited ? Icons.check_circle : Icons.check,
-                          color: Colors.white,
-                        ),
-                        label: Text(
-                          _isVisited ? 'Visited' : 'Add to Visited',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
-                          foregroundColor:
-                              Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      ),
-                    ],
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    'Use the location action for a quick maps search, or mark this place once you have been there.',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.textTheme.bodySmall?.color,
+                    ),
                   ),
                 ],
               ),
@@ -329,6 +352,80 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _DetailMetaChip extends StatelessWidget {
+  const _DetailMetaChip({
+    required this.icon,
+    required this.label,
+    this.iconColor,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color? iconColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primary,
+        borderRadius: AppBorders.pill,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.xs,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: iconColor ?? theme.colorScheme.onSurface,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DetailSection extends StatelessWidget {
+  const _DetailSection({
+    required this.title,
+    required this.child,
+  });
+
+  final String title;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: theme.textTheme.titleLarge,
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        child,
+      ],
     );
   }
 }
