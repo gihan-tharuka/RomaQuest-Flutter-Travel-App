@@ -1,31 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:romaquest/theme/app_theme.dart';
 
-ThemeData lightTheme = ThemeData(
+ThemeData lightTheme = buildAppTheme(
   brightness: Brightness.light,
-
-  
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    backgroundColor:
-        Colors.white, 
-    selectedItemColor: Colors.black, 
-    unselectedItemColor: Colors.grey, 
-  ),
-
-  
-  cardTheme: CardThemeData(
-    color: Colors.white, 
-  ),
-  colorScheme: ColorScheme.light(
-    surface: Colors.white,
-    primary: Colors.white,
-    secondary: Colors.black,
-    onPrimary: Colors.white, 
-    onSecondary: Colors.grey, 
-  ),
-
-  textTheme: TextTheme(
-    bodyLarge: TextStyle(
-      color: Colors.black,
-    ),
-  ),
 );

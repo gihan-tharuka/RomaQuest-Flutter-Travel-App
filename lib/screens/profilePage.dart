@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:romaquest/screens/homepage.dart';
+import 'package:romaquest/theme/app_tokens.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -83,24 +84,17 @@ class _ProfilePageState extends State<ProfilePage> {
                       SizedBox(height: 20),
                       Text(
                         'Edit Profile',
-                        style: TextStyle(
-                          color: Theme.of(context).textTheme.bodyLarge!.color,
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.headlineMedium,
                       ),
-                      SizedBox(height: 12),
+                      SizedBox(height: AppSpacing.sm),
                       TextButton.icon(
                         onPressed: _pickImage,
                         icon: Icon(
                           Icons.camera_alt,
-                          color: Theme.of(context).textTheme.bodyLarge!.color,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                         label: Text(
                           'Edit Profile Photo',
-                          style: TextStyle(
-                            color: Theme.of(context).textTheme.bodyLarge!.color,
-                          ),
                         ),
                       ),
                     ],
@@ -112,91 +106,31 @@ class _ProfilePageState extends State<ProfilePage> {
                     controller: _nameController,
                     decoration: InputDecoration(
                       labelText: 'Username',
-                      labelStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onSecondary),
-                      filled: true,
-                      fillColor: Theme.of(context).colorScheme.primary,
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 12.0,
-                        horizontal: 16.0,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.secondary,
-                            width: 1.0),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            width: 2.0),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
                     ),
                   ),
                 ),
-                SizedBox(height: 12),
+                SizedBox(height: AppSpacing.sm),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: TextField(
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      labelStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onSecondary),
-                      filled: true,
-                      fillColor: Theme.of(context).colorScheme.primary,
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 12.0,
-                        horizontal: 16.0,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.secondary,
-                            width: 1.0),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            width: 2.0),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
                     ),
                   ),
                 ),
-                SizedBox(height: 12),
+                SizedBox(height: AppSpacing.sm),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: TextField(
                     controller: _passwordController,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      labelStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onSecondary),
-                      filled: true,
-                      fillColor: Theme.of(context).colorScheme.primary,
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 12.0,
-                        horizontal: 16.0,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.secondary,
-                            width: 1.0),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            width: 2.0),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
                     ),
                     obscureText: true,
                   ),
                 ),
-                SizedBox(height: 25),
+                SizedBox(height: AppSpacing.xl),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -204,10 +138,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       MaterialPageRoute(builder: (context) => HomePage()),
                     );
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
-                    foregroundColor: Color.fromARGB(255, 255, 255, 255),
-                  ),
                   child: Text('Save Profile'),
                 ),
                 SizedBox(height: 20),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:romaquest/screens/homepage.dart';
 import 'package:romaquest/screens/loginPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:romaquest/theme/app_tokens.dart';
 
 
 class RegistrationPage extends StatefulWidget {
@@ -90,8 +91,8 @@ void signUserUp() async {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(50),
-                  topRight: Radius.circular(50),
+                  topLeft: Radius.circular(AppRadius.xl),
+                  topRight: Radius.circular(AppRadius.xl),
                 ),
               ),
               child: Padding(
@@ -105,121 +106,46 @@ void signUserUp() async {
                             top: 30, bottom: 30), 
                         child: Text(
                           'Create New Account', 
-                          style: TextStyle(
-                            color: Theme.of(context).textTheme.bodyLarge!.color,
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
-                      SizedBox(height: 12),
+                      SizedBox(height: AppSpacing.sm),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: TextField(
                           controller: _emailController,
                           decoration: InputDecoration(
                             labelText: 'Email',
-                            labelStyle: TextStyle(
-                                color:
-                                    Theme.of(context).colorScheme.onSecondary),
-                            filled: true,
-                            fillColor: Theme.of(context).colorScheme.primary,
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: 12.0,
-                              horizontal: 16.0,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary, width: 1.0),
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary, width: 2.0),
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
                           ),
                         ),
                       ),
-                      SizedBox(height: 12),
+                      SizedBox(height: AppSpacing.sm),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: TextField(
                           controller: _passwordController,
                           decoration: InputDecoration(
                             labelText: 'Password',
-                            labelStyle: TextStyle(
-                                color:
-                                    Theme.of(context).colorScheme.onSecondary),
-                            filled: true,
-                            fillColor: Theme.of(context).colorScheme.primary,
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: 12.0,
-                              horizontal: 16.0,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color:Theme.of(context).colorScheme.secondary, width: 1.0),
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary, width: 2.0),
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
                           ),
                           obscureText: true,
                         ),
                       ),
-                      SizedBox(height: 12),
+                      SizedBox(height: AppSpacing.sm),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: TextField(
                           controller: _confirmPasswordController,
                           decoration: InputDecoration(
                             labelText: 'Confirm Password',
-                            labelStyle: TextStyle(
-                                color:
-                                    Theme.of(context).colorScheme.onSecondary),
-                            filled: true,
-                            fillColor: Theme.of(context).colorScheme.primary,
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: 12.0,
-                              horizontal: 16.0,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                  width: 1.0),
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
-                                  width: 2.0),
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
                           ),
                           obscureText: true,
                         ),
                       ),
-                      SizedBox(height: 25),
+                      SizedBox(height: AppSpacing.xl),
                       ElevatedButton(
                         onPressed: () async {
                           signUserUp();
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.secondary,
-                          foregroundColor: Color.fromARGB(255, 255, 255, 255),
-                        ),
                         child: Text('Register'),
                       ),
                       TextButton(
@@ -232,9 +158,7 @@ void signUserUp() async {
                         },
                         child: Text(
                           'Already have an account ? Log in',
-                          style: TextStyle(
-                            color: Theme.of(context).textTheme.bodyLarge!.color,
-                          ),
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
                       ),
                     ],
@@ -248,4 +172,3 @@ void signUserUp() async {
     );
   }
 }
-

@@ -1,30 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:romaquest/theme/app_theme.dart';
 
-ThemeData darkTheme = ThemeData(
+ThemeData darkTheme = buildAppTheme(
   brightness: Brightness.dark,
-
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    backgroundColor: Colors
-        .grey[900]!, 
-    selectedItemColor: Colors.white, 
-    unselectedItemColor: Colors.grey, 
-  ),
-
-  cardTheme: CardThemeData(
-    color: Colors.grey[900]!,
-  ),
-
-  colorScheme: ColorScheme.dark(
-    surface: Colors.black,
-    primary: Colors.grey[900]!,
-    secondary: Colors.grey[800]!,
-    onPrimary: Colors.white, 
-    onSecondary: Colors.grey, 
-  ),
-  
-  textTheme: TextTheme(
-    bodyLarge: TextStyle(
-      color: Colors.white,
-    ),
-  ),
 );

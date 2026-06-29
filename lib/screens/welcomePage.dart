@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:romaquest/screens/auth_page.dart';
+import 'package:romaquest/theme/app_tokens.dart';
 
 class WelcomePage extends StatelessWidget {
   @override
@@ -22,38 +23,31 @@ class WelcomePage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(50),
-                  topRight: Radius.circular(50),
+                  topLeft: Radius.circular(AppRadius.xl),
+                  topRight: Radius.circular(AppRadius.xl),
                 ),
               ),
               child: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: MediaQuery.of(context).size.width * 0.1,
-                    vertical: 20.0,
+                    vertical: AppSpacing.lg,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'WELCOME TO ROME...',
-                        style: TextStyle(
-                          color: Theme.of(context).textTheme.bodyLarge!.color,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.headlineMedium,
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 30),
+                      SizedBox(height: AppSpacing.xl),
                       Text(
                         'Immerse yourself in the timeless charm of Rome, where ancient history and modern allure seamlessly blend, inviting you on a journey of discovery and adventure.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Theme.of(context).textTheme.bodyLarge!.color,
-                          fontSize: 15,
-                        ),
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                      SizedBox(height: 40),
+                      SizedBox(height: AppSpacing.xl),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.push(
@@ -63,12 +57,6 @@ class WelcomePage extends StatelessWidget {
                             ),
                           );
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
-                          foregroundColor:
-                              Theme.of(context).colorScheme.onPrimary,
-                        ),
                         child: Text('Get Started'),
                       ),
                     ],
